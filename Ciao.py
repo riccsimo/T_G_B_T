@@ -1,1 +1,1 @@
-nicco becchi è un cazzone
+NiccoBecchi merda
