@@ -1,1 +1,3 @@
-#NiccoBecchi & RicSimo & GiuliManc merdeee
+import numpy as np
+
+print(np.pi)
