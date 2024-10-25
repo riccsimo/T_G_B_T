@@ -1,15 +1,17 @@
-#importo i moduli
+#Importo i moduli
 import numpy as np 
 import matplotlib.pyplot as plt
 import batman 
 
-#definisco i parametri del pianeta K2-287 b dal sito: https://exoplanet.eu/catalog/k2_287_b--7012/
+
+#Definisco i parametri del pianeta K2-287 b dal sito: https://exoplanet.eu/catalog/k2_287_b--7012/
 a = 0.1206         #AU
 au2km = 1.496e8       #km
 star_radius = 1.07    #Rsun
 planet_radius = 0.833  #Rjupiter
 jupiter_radius = 71492 #km
-sun_radius = 695700
+sun_radius = 695700 #km
+
 
 #Limb darkening coefficients da: https://exoctk.stsci.edu/limb_darkening
 try:
@@ -17,11 +19,12 @@ try:
     u1 = np.average(LD_coef[:,8])
     u2 = np.average(LD_coef[:,10])
 except:
-    #calcolati a partire dal file ExoCTK_results.txt
+    #Calcolati a partire dal file ExoCTK_results.txt
     u1 = 0.4237666666666667
     u2 = 0.21503333333333335
 
-#definisco l'oggetto parametri per batman
+
+#Definisco l'oggetto parametri per batman
 parametri = batman.TransitParams()
 parametri.t0 = 0.                       #time of inferior conjunction
 parametri.per = 14.893291                     #orbital period
@@ -34,17 +37,17 @@ parametri.u = [u1, u2]                #limb darkening coefficients [u1, u2]
 parametri.limb_dark = "quadratic"       #limb darkening model
 
 
-#array di tempi per il transito
-t = np.linspace(-0.5, 0.5, 100)
-#modello batman
+#Array di tempi per il transito
+t = np.linspace(-0.15, 0.15, 100)
+
+#Modello batman
 m = batman.TransitModel(parametri, t)    #initializes model
 flux = m.light_curve(parametri)          #calculates light curve
 
 
-#plott e salvataggio immagine
+#Plot e salvataggio immagine
 plt.plot(t, flux)
 plt.xlabel("Time from central transit")
 plt.ylabel("Relative flux")
-
 plt.savefig('K2-287_b_assignment1_taskF.png', format='png', dpi=300)
 plt.show()
