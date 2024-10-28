@@ -87,5 +87,5 @@ The command generates a graph of the transit light curve and saves it as `K2-287
 
 ---
 
-Feel free to use and modify this tool to analyze various exoplanets. Contributions are welcome to improve or extend functionality!
+
 
