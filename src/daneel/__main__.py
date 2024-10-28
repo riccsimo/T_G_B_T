@@ -34,6 +34,16 @@ def main():
         action="store_true",
     )
 
+    #flag -t per il transito
+    parser.add_argument(
+        "-t",
+        "--transit",
+        dest="transit",
+        required=False,
+        help="Plot the transit light curve",
+        action="store_true",
+    )
+    
     args = parser.parse_args()
 
     """Launch Daneel"""
@@ -41,7 +51,10 @@ def main():
     print(f"Daneel starts at {start}")
 
     input_pars = Parameters(args.input_file).params
-
+    
+    # Chiamata alla funzione di transito con i parametri estratti
+    if args.transit:
+        transit(input_pars)  # Passa il dizionario dei parametri a transit
     if args.detect:
         pass
     if args.atmosphere:

@@ -1,0 +1,12 @@
+name_of_the_exoplanet: 'K2-287_b'
+a: 0.1206
+star_radius: 1.07
+planet_radius: 0.833
+inclination: 88.13
+eccentricity: 0.478
+omega: 10.1
+period: 14.893291
+t0: 0.0
+transit_duration: 0.3 
+u1: 0.4237666666666667 
+u2: 0.21503333333333335  

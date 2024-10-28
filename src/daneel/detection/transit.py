@@ -1,53 +1,54 @@
-#Importo i moduli
-import numpy as np 
+# Importa i moduli necessari
+import numpy as np
 import matplotlib.pyplot as plt
-import batman 
+import batman
 
+def transit(params):
+    # Extracting parameters
+    name_of_the_exoplanet = str(params.get('name_of_the_exoplanet','!!Name not found!!'))
+    a = params.get('a', 1)  # Semi-asse maggiore (AU)
+    star_radius = params.get('star_radius',1)  # Raggio della stella (in raggi solari)
+    planet_radius = params.get('planet_radius',1)  # Raggio del pianeta (in raggi di Giove)
+    inclination = params.get('inclination',0)  # Inclinazione orbitale (gradi)
+    eccentricity = params.get('eccentricity', 0)  # Eccentricità
+    omega = params.get('omega', 0)  # Longitudine del periasse (gradi)
+    period = params.get('period', 10)  # Periodo orbitale (giorni)
+    t0 = params.get('t0', 0)  # Tempo della congiunzione inferiore
+    transit_duration = params.get('transit_duration', 0.3)  # Durata del transito in giorni
+    u1 = params.get('u1', 0)  # Coefficiente di oscuramento al bordo 1
+    u2 = params.get('u2', 0)  # Coefficiente di oscuramento al bordo 2
 
-#Definisco i parametri del pianeta K2-287 b dal sito: https://exoplanet.eu/catalog/k2_287_b--7012/
-a = 0.1206         #AU
-au2km = 1.496e8       #km
-star_radius = 1.07    #Rsun
-planet_radius = 0.833  #Rjupiter
-jupiter_radius = 71492 #km
-sun_radius = 695700 #km
+    # Costants
+    au2km = 1.496e8  # Conversione da AU a km
+    jupiter_radius = 71492  # Raggio di Giove in km
+    sun_radius = 695700  # Raggio del Sole in km
 
+    # Parameters input for Batman model
+    parametri = batman.TransitParams()
+    parametri.t0 = t0
+    parametri.per = period
+    parametri.rp = planet_radius * jupiter_radius / (star_radius * sun_radius)
+    parametri.a = a * au2km / (star_radius * sun_radius)
+    parametri.inc = inclination
+    parametri.ecc = eccentricity
+    parametri.w = omega
+    parametri.u = [u1, u2]  # Coefficienti di oscuramento al bordo
+    parametri.limb_dark = "quadratic"  # Modello di oscuramento al bordo
 
-#Limb darkening coefficients da: https://exoctk.stsci.edu/limb_darkening
-try:
-    LD_coef = np.genfromtxt('ExoCTK_results.txt',skip_header=2)
-    u1 = np.average(LD_coef[:,8])
-    u2 = np.average(LD_coef[:,10])
-except:
-    #Calcolati a partire dal file ExoCTK_results.txt
-    u1 = 0.4237666666666667
-    u2 = 0.21503333333333335
+    # time array for the transit
+    t = np.linspace(t0 -transit_duration / 2 - 0.1, t0 + transit_duration / 2 + 0.1, 100)
 
+    # Light curve using batman
+    m = batman.TransitModel(parametri, t)
+    flux = m.light_curve(parametri)
 
-#Definisco l'oggetto parametri per batman
-parametri = batman.TransitParams()
-parametri.t0 = 0.                       #time of inferior conjunction
-parametri.per = 14.893291                     #orbital period
-parametri.rp = planet_radius * jupiter_radius /  (star_radius * sun_radius)                     #planet radius (in units of stellar radii)
-parametri.a = a * au2km / (star_radius * sun_radius)                       #semi-major axis (in units of stellar radii)
-parametri.inc = 88.13       #not known             #orbital inclination (in degrees)
-parametri.ecc = 0.478                      #eccentricity
-parametri.w = 10.1                      #longitude of periastron (in degrees)
-parametri.u = [u1, u2]                #limb darkening coefficients [u1, u2]
-parametri.limb_dark = "quadratic"       #limb darkening model
+    # Plot and saving immage
+    plt.plot(t, flux)
+    plt.xlabel("Time from central transit")
+    plt.ylabel("Relative flux")
+    plt.title(f"Transit Light Curve of {name_of_the_exoplanet}")
+    plt.savefig(name_of_the_exoplanet+'_assignment1_taskF.png', format='png', dpi=300)
+    plt.show()
+    
+    
 
-
-#Array di tempi per il transito
-t = np.linspace(-0.15, 0.15, 100)
-
-#Modello batman
-m = batman.TransitModel(parametri, t)    #initializes model
-flux = m.light_curve(parametri)          #calculates light curve
-
-
-#Plot e salvataggio immagine
-plt.plot(t, flux)
-plt.xlabel("Time from central transit")
-plt.ylabel("Relative flux")
-plt.savefig('K2-287_b_assignment1_taskF.png', format='png', dpi=300)
-plt.show()
