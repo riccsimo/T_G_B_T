@@ -1,3 +1,4 @@
 from .data_process import *
-# detection/__init__.py
-from .transit import *  # Importa transit per l'accesso globale
+from .transit import *  
+from .SVM_exoplanets import *
+from .NN_exoplanets import *
