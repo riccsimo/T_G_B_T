@@ -1,0 +1,7 @@
+path_to_train_dataset: "/home/simonetto/compastro/data/kepler/data_no_injection/exoTrain.csv"
+path_to_dev_dataset: "/home/simonetto/compastro/data/kepler/data_no_injection/exoTest.csv"
+complex_model: False
+load_model: False
+render_plot: True
+weights_path: False
+save_weights: False
