@@ -49,6 +49,3 @@ def transit(params):
     plt.title(f"Transit Light Curve of {name_of_the_exoplanet}")
     plt.savefig(name_of_the_exoplanet+'_assignment1_taskF.png', format='png', dpi=300)
     plt.show()
-    
-    
-
