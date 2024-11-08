@@ -10,14 +10,14 @@ class TransitModel:
     def __init__(self, params):
 
         # Estrazione dei parametri
-        self.name_of_the_exoplanet = params.get('name_of_the_exoplanet', '!!Name not found!!')
-        self.a = params.get('a', 1)  # Semi-asse maggiore (AU)
+        self.name_of_the_exoplanet = params.get('name_of_the_exoplanet', ['!!Name not found!!'])
+        self.a = params.get('a', [1])  # Semi-asse maggiore (AU)
         self.star_radius = params.get('star_radius', 1)  # Raggio della stella (in raggi solari)
-        self.planet_radius = params.get('planet_radius', 1)  # Raggio del pianeta (in raggi di Giove)
-        self.inclination = params.get('inclination', 0)  # Inclinazione orbitale (gradi)
-        self.eccentricity = params.get('eccentricity', 0)  # Eccentricità
-        self.omega = params.get('omega', 0)  # Longitudine del periasse (gradi)
-        self.period = params.get('period', 10)  # Periodo orbitale (giorni)
+        self.planet_radius = params.get('planet_radius', [1])  # Raggio del pianeta (in raggi di Giove)
+        self.inclination = params.get('inclination', [0])  # Inclinazione orbitale (gradi)
+        self.eccentricity = params.get('eccentricity', [0])  # Eccentricità
+        self.omega = params.get('omega', [0])  # Longitudine del periasse (gradi)
+        self.period = params.get('period', [10])  # Periodo orbitale (giorni)
         self.t0 = params.get('t0', 0)  # Tempo della congiunzione inferiore
         self.transit_duration = params.get('transit_duration', 0.3)  # Durata del transito in giorni
 
