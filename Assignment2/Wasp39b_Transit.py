@@ -17,7 +17,7 @@ params = {
     'transit_duration': [0.2, 0.2, 0.2],
     'u1': 0.42376,
     'u2': 0.21503,
-    'save_image' : True,
+    'save_image' : False,
     'LD_path' : "ExoCTK_results.txt"
 }
 
