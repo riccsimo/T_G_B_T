@@ -3,10 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import batman
 
-import batman
-import numpy as np
-import matplotlib.pyplot as plt
-
 class TransitModel:
 
     LD_table = np.genfromtxt("ExoCTK_results.txt")
@@ -14,7 +10,7 @@ class TransitModel:
     def __init__(self, params):
 
         # Estrazione dei parametri
-        self.name_of_the_exoplanet = str(params.get('name_of_the_exoplanet', '!!Name not found!!'))
+        self.name_of_the_exoplanet = params.get('name_of_the_exoplanet', '!!Name not found!!')
         self.a = params.get('a', 1)  # Semi-asse maggiore (AU)
         self.star_radius = params.get('star_radius', 1)  # Raggio della stella (in raggi solari)
         self.planet_radius = params.get('planet_radius', 1)  # Raggio del pianeta (in raggi di Giove)
@@ -24,6 +20,7 @@ class TransitModel:
         self.period = params.get('period', 10)  # Periodo orbitale (giorni)
         self.t0 = params.get('t0', 0)  # Tempo della congiunzione inferiore
         self.transit_duration = params.get('transit_duration', 0.3)  # Durata del transito in giorni
+
 
         # Parametri di plot
         self.save = params.get("save_image", False)
@@ -43,39 +40,47 @@ class TransitModel:
         self.jupiter_radius = 71492  # Raggio di Giove in km
         self.sun_radius = 695700  # Raggio del Sole in km
 
-        # Parametri per il modello Batman
-        self.parametri = batman.TransitParams()
-        self.parametri.t0 = self.t0
-        self.parametri.per = self.period
-        self.parametri.rp = self.planet_radius * self.jupiter_radius / (self.star_radius * self.sun_radius)
-        self.parametri.a = self.a * self.au2km / (self.star_radius * self.sun_radius)
-        self.parametri.inc = self.inclination
-        self.parametri.ecc = self.eccentricity
-        self.parametri.w = self.omega
-        self.parametri.u = [self.u1, self.u2]  # Coefficienti di oscuramento al bordo
-        self.parametri.limb_dark = "quadratic"  # Modello di oscuramento al bordo
-
-
-
-    def plot_light_curve(self):
-        # Array temporale per il transito
         t = np.linspace(
-            self.t0 - self.transit_duration / 2 ,
-            self.t0 + self.transit_duration / 2 ,
+            self.t0 - np.max(self.transit_duration) / 2 ,
+            self.t0 + np.max(self.transit_duration) / 2 ,
             100
         )
 
-        # Curva di luce usando batman
-        m = batman.TransitModel(self.parametri, t)
-        flux = m.light_curve(self.parametri)
+        flux = []
+
+        for i in range(len(self.name_of_the_exoplanet)):
+
+            # Parametri per il modello Batman
+            self.parametri = batman.TransitParams()
+            self.parametri.t0 = self.t0
+            self.parametri.per = self.period[i]
+            self.parametri.rp = self.planet_radius[i] * self.jupiter_radius / (self.star_radius * self.sun_radius)
+            self.parametri.a = self.a[i] * self.au2km / (self.star_radius * self.sun_radius)
+            self.parametri.inc = self.inclination[i]
+            self.parametri.ecc = self.eccentricity[i]
+            self.parametri.w = self.omega[i]
+            self.parametri.u = [self.u1, self.u2]  # Coefficienti di oscuramento al bordo
+            self.parametri.limb_dark = "quadratic"  # Modello di oscuramento al bordo
+
+
+            # Curva di luce usando batman
+            m = batman.TransitModel(self.parametri, t)
+            flux.append(m.light_curve(self.parametri))
+
 
         # Plot e salvataggio dell'immagine
-        plt.plot(t, flux)
+        for i in range(len(self.name_of_the_exoplanet)):
+            plt.plot(t, flux[i], label=f"{self.name_of_the_exoplanet[i]}")
+
         plt.xlabel("Relative time [days]")
         plt.ylabel("Relative Flux")
         plt.title(f"Transit Light Curve of {self.name_of_the_exoplanet}")
+        plt.legend()
 
         if self.save:
-            plt.savefig(f"{self.name_of_the_exoplanet}_assignment2_taskA.png", format='png', dpi=300)
+            plt.savefig("assignment2_taskA.png", format='png', dpi=300)
+            #plt.savefig(f"{self.name_of_the_exoplanet}_assignment2_taskA.png", format='png', dpi=300)
 
         plt.show()
+
+
