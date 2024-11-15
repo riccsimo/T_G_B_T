@@ -20,9 +20,10 @@ def main():
         "-d",
         "--detect",
         dest="detect",
+        type=str,
         required=False,
-        help="Initialise detection algorithms for Exoplanets",
-        action="store_true",
+        help="Initialise detection algorithms for Exoplanets (e.g., -d svm)",
+        choices=['svm', 'nn']
     )
 
     parser.add_argument(
@@ -44,6 +45,7 @@ def main():
         action="store_true",
     )
     
+    
     args = parser.parse_args()
 
     """Launch Daneel"""
@@ -55,8 +57,15 @@ def main():
     # Chiamata alla funzione di transito con i parametri estratti
     if args.transit:
         transit(input_pars)  # Passa il dizionario dei parametri a transit
-    if args.detect:
-        pass
+
+    if args.detect == 'svm':
+        svm_detector = SVMExoplanetDetector(input_pars)
+        svm_detector.run()
+        
+    elif args.detect == 'nn':
+        nn_detector = NNExoplanetDetector(input_pars)
+        nn_detector.run()
+        
     if args.atmosphere:
         pass
 
