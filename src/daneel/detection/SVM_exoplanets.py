@@ -37,10 +37,10 @@ class SVMExoplanetDetector:
 
     def load_data(self):
         # Check if the datasets exist
-        if not os.path.isfile(self.path_to_train_dataset):
-            raise FileNotFoundError(f"Training dataset not found at '{self.path_to_train_dataset}'")
-        if not os.path.isfile(self.path_to_dev_dataset):
-            raise FileNotFoundError(f"Development dataset not found at '{self.path_to_dev_dataset}'")
+        #if not os.path.isfile(self.path_to_train_dataset):
+        #    raise FileNotFoundError(f"Training dataset not found at '{self.path_to_train_dataset}'")
+        # if not os.path.isfile(self.path_to_dev_dataset):
+        #     raise FileNotFoundError(f"Development dataset not found at '{self.path_to_dev_dataset}'")
         
         # Loading datasets
         print("Loading datasets...")
@@ -157,7 +157,7 @@ class SVMExoplanetDetector:
 
 
 if __name__ == "__main__":
-    path = '/home/simonetto/compastro/The_Gang_Bang_Theory/Assignment2/taskH.yaml'
+    path = '../../../Assignment2/taskH.yaml'
     param= Parameters(path).params
     svm_detector = SVMExoplanetDetector(param)
     svm_detector.run()

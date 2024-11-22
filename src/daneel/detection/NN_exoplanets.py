@@ -218,7 +218,7 @@ class NNExoplanetDetector:
 
 
 if __name__ == "__main__":
-    path = '/home/simonetto/compastro/The_Gang_Bang_Theory/Assignment2/taskI.yaml'
+    path = '../../../Assignment2/taskI.yaml'
     param= Parameters(path).params
     nn_detector = NNExoplanetDetector(param)
     nn_detector.run()
