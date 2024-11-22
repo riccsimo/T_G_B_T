@@ -37,10 +37,10 @@ class SVMExoplanetDetector:
 
     def load_data(self):
         # Check if the datasets exist
-        #if not os.path.isfile(self.path_to_train_dataset):
-        #    raise FileNotFoundError(f"Training dataset not found at '{self.path_to_train_dataset}'")
-        # if not os.path.isfile(self.path_to_dev_dataset):
-        #     raise FileNotFoundError(f"Development dataset not found at '{self.path_to_dev_dataset}'")
+        if not os.path.isfile(self.path_to_train_dataset):
+            raise FileNotFoundError(f"Training dataset not found at '{self.path_to_train_dataset}'")
+         if not os.path.isfile(self.path_to_dev_dataset):
+             raise FileNotFoundError(f"Development dataset not found at '{self.path_to_dev_dataset}'")
         
         # Loading datasets
         print("Loading datasets...")
