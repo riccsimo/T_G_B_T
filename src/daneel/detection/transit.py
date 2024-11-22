@@ -5,8 +5,6 @@ import batman
 
 class TransitModel:
 
-    #LD_table = np.genfromtxt("ExoCTK_results.txt")
-
     def __init__(self, params):
 
         # Estrazione dei parametri
