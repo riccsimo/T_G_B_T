@@ -153,11 +153,11 @@ class SVMExoplanetDetector:
         self.build_model()
         self.train()
         self.evaluate()
-        self.plot_results()
+
 
 
 if __name__ == "__main__":
-    path = '/home/lucacecca/ComputationalAstro/comp_astro_24/Assignment2/taskH.yaml'
+    path = '/home/simonetto/compastro/The_Gang_Bang_Theory/Assignment2/taskH.yaml'
     param= Parameters(path).params
     svm_detector = SVMExoplanetDetector(param)
     svm_detector.run()
