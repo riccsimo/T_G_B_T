@@ -47,15 +47,14 @@ class NNExoplanetDetector:
                 [
                     tf.keras.layers.Input(input_shape),
                     tf.keras.layers.Flatten(),
-                    tf.keras.layers.Dense(100, activation="relu"),# kernel_regularizer=tf.keras.regularizers.l2(0.001)),
-                    #tf.keras.layers.BatchNormalization(),
-                   # tf.keras.layers.Dropout(0.3),
-                    tf.keras.layers.Dense(1, activation="relu"),# kernel_regularizer=tf.keras.regularizers.l2(0.001)),
-                    tf.keras.layers.Dense(1, activation="relu"),# kernel_regularizer=tf.keras.regularizers.l2(0.001)),
+                    tf.keras.layers.Dense(5, activation="relu"),
+                    tf.keras.layers.Dense(2, activation="relu"),
+                    #tf.keras.layers.Dense(2, activation="relu"),
+                    #tf.keras.layers.Dropout(0.3),
                     tf.keras.layers.Dense(1, activation="sigmoid"),
                 ]
             )
-            optimizer = Adam(learning_rate=0.01)
+            optimizer = Adam(learning_rate=0.001)
             model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=["accuracy"])
         else:
             model = tf.keras.models.Sequential(
