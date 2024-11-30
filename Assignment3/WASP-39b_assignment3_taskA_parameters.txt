@@ -1,0 +1,54 @@
+[Global]
+xsec_path = ../../data/atmosphere/xsecs
+cia_path = ../../data/atmosphere/cia/hitran
+
+[Chemistry]
+chemistry_type = taurex
+fill_gases = H2,He
+ratio = 0.172
+
+    [[H2O]]
+    gas_type = constant
+    mix_ratio = 0.0989
+
+    [[CH4]]
+    gas_type = constant
+    mix_ratio = 0.005495
+
+    [[CO2]]
+    gas_type = constant
+    mix_ratio = 2.814e-06
+
+    [[CO]]
+    gas_type = constant
+    mix_ratio = 7.73e-06
+
+[Temperature]
+profile_type = isothermal
+T = 1166.0
+
+[Pressure]
+profile_type = Simple
+atm_min_pressure = 1.0
+atm_max_pressure = 1000000.0
+nlayers = 30
+
+[Planet]
+planet_type = Simple
+planet_mass = 0.275
+planet_radius = 1.27
+
+[Star]
+star_type = phoenix
+temperature = 5400.0
+radius = 0.895
+
+[Model]
+model_type = transmission
+
+    [[Absorption]]
+
+    [[CIA]]
+    cia_pairs = H2-H2, H2-He
+
+    [[Rayleigh]]
