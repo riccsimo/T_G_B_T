@@ -218,7 +218,14 @@ class NNExoplanetDetector:
 
 
 if __name__ == "__main__":
-    path = '../../../Assignment2/taskI.yaml'
-    param= Parameters(path).params
+    
+    param = {'path_to_train_dataset': "../../../../data/kepler/data_no_injection/exoTrain.csv",
+            'path_to_dev_dataset': "../../../../data/kepler/data_no_injection/exoTest.csv",
+            'complex_model': True,
+            'load_model': False,
+            'render_plot': True,
+            'weights_path': False,
+            'save_weights': False,
+            }
     nn_detector = NNExoplanetDetector(param)
     nn_detector.run()

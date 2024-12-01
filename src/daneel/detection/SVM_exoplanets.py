@@ -157,8 +157,11 @@ class SVMExoplanetDetector:
 
 
 if __name__ == "__main__":
-    path = '../../../Assignment2/taskH.yaml'
-    param= Parameters(path).params
+    param = {'path_to_train_dataset': "../../../../data/kepler/data_no_injection/exoTrain.csv",
+            'path_to_dev_dataset': "../../../../data/kepler/data_no_injection/exoTest.csv",
+            'kernel': 'linear_svc',
+            'degree': 4
+            }
     svm_detector = SVMExoplanetDetector(param)
     svm_detector.run()
     

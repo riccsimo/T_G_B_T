@@ -1,5 +1,5 @@
-path_to_train_dataset: "../../../../data/kepler/data_no_injection/exoTrain.csv"
-path_to_dev_dataset: "../../../../data/kepler/data_no_injection/exoTest.csv"
+path_to_train_dataset: "../../data/kepler/data_no_injection/exoTrain.csv"
+path_to_dev_dataset: "../../data/kepler/data_no_injection/exoTest.csv"
 complex_model: True
 load_model: False
 render_plot: True
