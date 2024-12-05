@@ -1,0 +1,63 @@
+#Retrival
+path_to_observed_spectrum: ../../data/atmosphere/quickstart.dat
+
+#Model
+Global:
+  xsec_path: ../../data/atmosphere/xsecs
+  cia_path: ../../data/atmosphere/cia/hitran
+  phoenix_path: ../../data/atmosphere/phoenix/BT-Settl_M-0.0a+0.0
+  output_file: output.dat
+
+Model:
+  type: transmission # Può essere "trasmission" o "emission" o "direct_image"
+
+Atmospheric_model:
+  type: isothermal  # Può essere "isothermal" o "guillot"
+  parameters:
+    T: 1500.0 #K 
+    #T_irr: 1500.0 #k se Guillot
+
+Planet:
+  planet_radius: 1. #Rj
+  planet_mass: 1. #Mj
+
+Star:
+  type: blackbody # Può essere "blackbody" o "phoenix"
+  parameters:
+    radius: 1. #Rsun
+    temperature: 5700.0 #K
+
+Chemistry:
+  main_species:
+    fill_gases: [H2,He]
+    ratio: 0.172
+  other_molecules:
+    H2O:
+      gas_type: constant
+      mix_ratio: 1.2e-4  
+    # CH4:
+    #   gas_type: constant
+    #   mix_ratio: 0.005495
+    # CO2:
+    #   gas_type: constant
+    #   mix_ratio: 2.814e-06
+    # CO:
+    #   gas_type: constant
+    #   mix_ratio: 7.73e-06
+
+Pressure:
+  atm_min_pressure: 1e-0  # bar
+  atm_max_pressure: 1e6  # bar
+  nlayers: 30
+
+Model:
+  type: transmission # Può essere "trasmission" o "emission" o "direct_image"
+  physical_processes:
+      Absorption: True  # Attiva/disattiva il contributo di assorbimento
+      CIA:
+        enabled: True  # Attiva/disattiva il contributo CIA
+        pairs: 
+          - H2-H2
+          - H2-He
+      Rayleigh: True  # Attiva/disattiva il contributo Rayleigh
+

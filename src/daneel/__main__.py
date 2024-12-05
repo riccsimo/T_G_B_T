@@ -2,6 +2,7 @@ import datetime
 import argparse
 from daneel.parameters import Parameters
 from daneel.detection import *
+from daneel.atmosphere import *
 
 
 def main():
@@ -29,10 +30,11 @@ def main():
     parser.add_argument(
         "-a",
         "--atmosphere",
-        dest="complete",
+        dest="atmosphere",
         required=False,
-        help="Atmospheric Characterisazion from input transmission spectrum",
-        action="store_true",
+        type=str,
+        help="Atmospheric Characterization options: model or retrieve",
+        choices=['model', 'retrieve'],
     )
 
     #flag -t per il transito
@@ -58,16 +60,20 @@ def main():
     if args.transit:
         transit(input_pars)  # Passa il dizionario dei parametri a transit
 
-    if args.detect == 'svm':
-        svm_detector = SVMExoplanetDetector(input_pars)
-        svm_detector.run()
-        
-    elif args.detect == 'nn':
-        nn_detector = NNExoplanetDetector(input_pars)
-        nn_detector.run()
+    if args.detect:
+        if args.detect == 'svm':
+            svm_detector = SVMExoplanetDetector(input_pars)
+            svm_detector.run()
+            
+        elif args.detect == 'nn':
+            nn_detector = NNExoplanetDetector(input_pars)
+            nn_detector.run()
         
     if args.atmosphere:
-        pass
+        if args.atmosphere == 'model':
+            pass
+        elif args.atmosphere == 'retrieve':
+            pass
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")
