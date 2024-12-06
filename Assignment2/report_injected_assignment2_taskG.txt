@@ -1,0 +1,25 @@
+SIMPLE:
+
+Precision - Train Set 0.5900603274921
+Precision - Dev Set 0.5590200445434298
+
+Confusion Matrix - Train Set
+[[ 799 1427]
+ [ 807 2054]]
+Confusion Matrix - Dev Set
+[[ 56 198]
+ [ 65 251]]
+
+
+
+COMPLEX:
+
+Precision - Train Set 0.5925925925925926
+Precision - Dev Set 0.5670731707317073
+
+Confusion Matrix - Train Set
+[[1379  847]
+ [1629 1232]]
+Confusion Matrix - Dev Set
+[[ 41 213]
+ [ 37 279]]
