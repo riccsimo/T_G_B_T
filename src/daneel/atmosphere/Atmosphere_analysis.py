@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import corner
 import numpy as np
 import taurex.log
 taurex.log.disableLogging()
@@ -86,6 +87,8 @@ class AtmosphereForwardModel:
         
         # Retrieval
         self.path_to_observed_spectrum = params.get('path_to_observed_spectrum')
+        self.num_live_points = float(params.get('num_live_points',50))
+        self.tol = float(params.get('tol',0.5))
         
     def construct_taurex_model(self):
         OpacityCache().clear_cache()
@@ -213,7 +216,8 @@ class AtmosphereForwardModel:
         print('Running the model')
         bin_wavenumber, bin_rprs,_,_  = bn.bin_model(self.model.model(wngrid=wngrid))
         print('Complete')
-        opt = NestleOptimizer(num_live_points=50)
+        #parameters of the nested sampling algorithm
+        opt = NestleOptimizer(num_live_points=self.num_live_points, tol=self.tol)
 
         try:
             obs = ObservedSpectrum(self.path_to_observed_spectrum)
@@ -259,14 +263,68 @@ class AtmosphereForwardModel:
         print("Optimization complete!")
 
         #plot
-        for solution, optimized_map, optimized_value, values in opt.get_solution():
-            opt.update_model(optimized_map)
-            plt.figure()
-            plt.errorbar(obs.wavelengthGrid, obs.spectrum, obs.errorBar, label='Obs')
-            plt.plot(obs.wavelengthGrid, obin.bin_model(self.model.model(obs.wavenumberGrid))[1], label='TM')
-            plt.legend()
-            plt.xscale('log')
-            plt.title("Observed vs Optimized Model")
-            plt.tight_layout()
-            plt.show()
+        for sol_num, map_values, median_values, extra in opt.get_solution():
+            stats, fitting_params, raw_traces, raw_weights = extra
+
+            # Update the model with the best-fit (MAP) parameters
+            opt.update_model(map_values)
+
+            # Extract observed and best-fit spectrum
+            obs_wavelength = obs.wavelengthGrid
+            obs_spectrum = obs.spectrum
+            obs_error = obs.errorBar
+            _, bestfit_spectrum, _, _ = obin.bin_model(self.model.model(obs.wavenumberGrid))
+
+            # Extract parameter information
+            param_dict = fitting_params[1]  
+            param_names = list(param_dict.keys())
+            print("Parameter Names:", param_names)
+
+            # Print MAP and Median estimates for each parameter
+            for pname, mv, medv in zip(param_names, map_values, median_values):
+                print(f"{pname}: MAP={mv}, Median={medv}")
+
+        # At this point, 'obs_wavelength', 'obs_spectrum', 'obs_error', and 'bestfit_spectrum' 
+        # refer to the last solution from the loop above.
+
+        # Plot the best-fit transmission spectrum
+        plt.figure()
+        plt.errorbar(obs_wavelength, obs_spectrum, obs_error, fmt='o', color='black', label='Observed')
+        plt.plot(obs_wavelength, bestfit_spectrum, color='red', label='Best Fit Model')
+        plt.xscale('log')
+        plt.xlabel('Wavelength (μm)')
+        plt.ylabel('(R$_p$/R$_s$)²')
+        plt.title('Best Fit Transmission Spectrum')
+        plt.grid(True, linestyle='--', linewidth=0.5)
+        plt.legend()
+        plt.show()
+
+        # Compute (R_p/R_s)^2 and its standard deviation
+        rprs_sq = bestfit_spectrum**2
+        rprs_std = np.std(rprs_sq)
+        rprs_error = np.full_like(rprs_sq, rprs_std)
+
+        # Save data to a txt file: wavelength, (Rp/Rs)^2, std((Rp/Rs)^2)
+        data = np.column_stack([obs_wavelength, rprs_sq, rprs_error])
+        np.savetxt(self.output_file_name, data, 
+                header='wavelength(micron) (Rp/Rs)^2 std((Rp/Rs)^2)', 
+                fmt='%.8e')
+
+        # Retrieve samples and weights from the solution (usually the first solution)
+        samples = opt.get_samples(0)
+        weights = opt.get_weights(0)
+
+        # Create the corner plot (works for any number of parameters)
+        fig = corner.corner(
+            samples,
+            weights=weights,
+            labels=param_names,
+            quantiles=[0.16, 0.5, 0.84],
+            show_titles=True,
+            title_fmt=".2f",
+            color="blue"
+        )
+
+        plt.show()
+
     

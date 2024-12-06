@@ -1,6 +1,7 @@
 #Retrival
 path_to_observed_spectrum: ../../data/atmosphere/quickstart.dat
-
+num_live_points: 50
+tol: 0.5
 #Model
 Global:
   xsec_path: ../../data/atmosphere/xsecs
