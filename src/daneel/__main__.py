@@ -71,9 +71,13 @@ def main():
         
     if args.atmosphere:
         if args.atmosphere == 'model':
-            pass
+            model=AtmosphereForwardModel(input_pars)
+            model.construct_taurex_model()
+            model.ForwardModel()
         elif args.atmosphere == 'retrieve':
-            pass
+            retrieve=AtmosphereForwardModel(input_pars)
+            retrieve.construct_taurex_model()
+            retrieve.Retrival()
 
     finish = datetime.datetime.now()
     print(f"Daneel finishes at {finish}")
@@ -81,3 +85,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
