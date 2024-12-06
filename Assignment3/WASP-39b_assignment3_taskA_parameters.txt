@@ -1,54 +1,61 @@
-[Global]
-xsec_path = ../../data/atmosphere/xsecs
-cia_path = ../../data/atmosphere/cia/hitran
+#Retrival
+path_to_observed_spectrum: ../../data/atmosphere/quickstart.dat
 
-[Chemistry]
-chemistry_type = taurex
-fill_gases = H2,He
-ratio = 0.172
+#Model
+Global:
+  xsec_path: ../../data/atmosphere/xsecs
+  cia_path: ../../data/atmosphere/cia/hitran
+  phoenix_path: ../../data/atmosphere/phoenix/BT-Settl_M-0.0a+0.0
+  output_file: output.dat
 
-    [[H2O]]
-    gas_type = constant
-    mix_ratio = 0.0989
+Model:
+  type: transmission # Può essere "trasmission" o "emission" o "direct_image"
 
-    [[CH4]]
-    gas_type = constant
-    mix_ratio = 0.005495
+Atmospheric_model:
+  type: isothermal  # Può essere "isothermal" o "guillot"
+  parameters:
+    T: 1166.0 #K
 
-    [[CO2]]
-    gas_type = constant
-    mix_ratio = 2.814e-06
+Planet:
+  planet_radius: 1.27 #Rj
+  planet_mass: 0.275 #Mj
 
-    [[CO]]
-    gas_type = constant
-    mix_ratio = 7.73e-06
+Star:
+  type: blackbody # Può essere "blackbody" o "phoenix"
+  parameters:
+    radius: 0.895 #Rsun
+    temperature: 5400.0 #K
 
-[Temperature]
-profile_type = isothermal
-T = 1166.0
+Chemistry:
+  main_species:
+    fill_gases: ['H2', 'He']
+    ratio: 0.172
+  other_molecules:
+    H2O:
+      gas_type: constant
+      mix_ratio: 0.0989
+    CH4:
+      gas_type: constant
+      mix_ratio: 0.005495
+    CO2:
+      gas_type: constant
+      mix_ratio: 2.814e-06
+    CO:
+      gas_type: constant
+      mix_ratio: 7.73e-06
 
-[Pressure]
-profile_type = Simple
-atm_min_pressure = 1.0
-atm_max_pressure = 1000000.0
-nlayers = 30
+Pressure:
+  atm_min_pressure: 1.0  # bar
+  atm_max_pressure: 1000000.0  # bar
+  nlayers: 30
 
-[Planet]
-planet_type = Simple
-planet_mass = 0.275
-planet_radius = 1.27
-
-[Star]
-star_type = phoenix
-temperature = 5400.0
-radius = 0.895
-
-[Model]
-model_type = transmission
-
-    [[Absorption]]
-
-    [[CIA]]
-    cia_pairs = H2-H2, H2-He
-
-    [[Rayleigh]]
+Model:
+  type: transmission # Può essere "trasmission" o "emission" o "direct_image"
+  physical_processes:
+      Absorption: True  # Attiva/disattiva il contributo di assorbimento
+      CIA:
+        enabled: True  # Attiva/disattiva il contributo CIA
+        pairs:
+          - H2-H2
+          - H2-He
+      Rayleigh: True  # Attiva/disattiva il contributo Rayleigh
