@@ -3,7 +3,7 @@ Global:
   xsec_path: ../../data/atmosphere/xsecs
   cia_path: ../../data/atmosphere/cia/hitran
   phoenix_path: ../../data/atmosphere/phoenix/BT-Settl_M-0.0a+0.0
-  output_file: output.dat
+  output_file: WASP-39b_assignment3_taskA_spectrum.dat 
 
 Model:
   type: transmission # Può essere "trasmission" o "emission" o "direct_image"
