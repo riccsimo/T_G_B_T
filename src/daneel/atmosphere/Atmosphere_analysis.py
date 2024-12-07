@@ -180,7 +180,7 @@ class AtmosphereForwardModel:
         #Make a logarithmic grid
         wngrid = np.sort(10000/np.logspace(-0.4,1.1,1000))
         bn = SimpleBinner(wngrid=wngrid)
-        print('Running the model')
+        print('Building the model')
         bin_wavenumber, bin_rprs,_,_  = bn.bin_model(self.model.model(wngrid=wngrid))
         print('Complete')
         
@@ -205,7 +205,7 @@ class AtmosphereForwardModel:
         plt.grid(True, linestyle="--", linewidth=0.5)
         plt.xscale('log')
         plt.legend()
-        plt.tight_layout()
+        plt.savefig(self.output_file_name[:-4]+'_bestfit_spectrum.png', dpi=150)
         plt.show()
         
     def Retrival(self):
@@ -214,7 +214,7 @@ class AtmosphereForwardModel:
         wngrid = np.sort(10000/np.logspace(-0.4,1.1,1000))
         bn = SimpleBinner(wngrid=wngrid)
         print('Running the model')
-        bin_wavenumber, bin_rprs,_,_  = bn.bin_model(self.model.model(wngrid=wngrid))
+        self.model.model(wngrid=wngrid)
         print('Complete')
         #parameters of the nested sampling algorithm
         opt = NestleOptimizer(num_live_points=self.num_live_points, tol=self.tol)
@@ -288,7 +288,7 @@ class AtmosphereForwardModel:
         # refer to the last solution from the loop above.
 
         # Plot the best-fit transmission spectrum
-        plt.figure()
+        plt.figure(figsize=(10,6))
         plt.errorbar(obs_wavelength, obs_spectrum, obs_error, fmt='o', color='black', label='Observed')
         plt.plot(obs_wavelength, bestfit_spectrum, color='red', label='Best Fit Model')
         plt.xscale('log')
@@ -297,6 +297,7 @@ class AtmosphereForwardModel:
         plt.title('Best Fit Transmission Spectrum')
         plt.grid(True, linestyle='--', linewidth=0.5)
         plt.legend()
+        plt.savefig(self.output_file_name[:-4]+'_bestfit_spectrum.png', dpi=150)
         plt.show()
 
         # Compute (R_p/R_s)^2 and its standard deviation
@@ -324,7 +325,7 @@ class AtmosphereForwardModel:
             title_fmt=".2f",
             color="blue"
         )
-
+        fig.savefig(self.output_file_name[:-4]+'_cornerplot.png', dpi=150)
         plt.show()
 
     

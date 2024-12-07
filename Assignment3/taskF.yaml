@@ -1,13 +1,13 @@
-# #Retrival
-# path_to_observed_spectrum: ../../data/atmosphere/quickstart.dat
-# num_live_points: 50
-# tol: 0.5
+#Retrival
+path_to_observed_spectrum: ../../data/atmosphere/quickstart.dat
+num_live_points: 50
+tol: 0.5
 #Model
 Global:
   xsec_path: ../../data/atmosphere/xsecs
   cia_path: ../../data/atmosphere/cia/hitran
   phoenix_path: ../../data/atmosphere/phoenix/BT-Settl_M-0.0a+0.0
-  output_file: taskE_spectrum.dat
+  output_file: taskF_spectrum.dat
 
 Model:
   type: transmission # Può essere "trasmission" o "emission" o "direct_image"
