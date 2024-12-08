@@ -26,20 +26,20 @@ Star:
 Chemistry:
   main_species:
     fill_gases: ['H2', 'He']
-    ratio: 7.73e-06
+    ratio: 0.172
   other_molecules:
     H2O:
       gas_type: constant
-      mix_ratio: 0.0989
+      mix_ratio: 0.009890000000000001
     CH4:
       gas_type: constant
-      mix_ratio: 0.005495
+      mix_ratio: 0.0005495000000000001
     CO2:
       gas_type: constant
-      mix_ratio: 2.814e-06
+      mix_ratio: 2.814e-07
     CO:
       gas_type: constant
-      mix_ratio: 7.73e-06
+      mix_ratio: 7.729999999999999e-07
 
 Pressure:
   atm_min_pressure: 1.0  # bar
