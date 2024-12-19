@@ -1,0 +1,89 @@
+[Global]
+xsec_path = ../../../data/atmosphere/xsecs
+cia_path = ../../../data/atmosphere/cia/hitran
+mpi_use_shared = True
+
+
+[Chemistry]
+chemistry_type = taurex
+fill_gases = H2,He
+ratio = 0.172
+
+    [[H2O]]
+    gas_type = constant
+    mix_ratio=1e-2
+
+    [[CO2]]
+    gas_type = constant
+    mix_ratio=1e-4
+
+    [[CO]]
+    gas_type = constant
+    mix_ratio=1e-2
+
+    [[Na]]
+    gas_type = constant
+    mix_ratio=1e-3
+
+
+
+[Temperature]
+profile_type = isothermal
+T = 1000
+
+[Pressure]
+profile_type = Simple
+atm_min_pressure = 1e-0
+atm_max_pressure = 1e6
+nlayers = 100
+
+[Planet]
+planet_type = Simple
+planet_mass = 0.281
+planet_radius = 1.279
+
+[Star]
+star_type = blackbody
+temperature = 5485
+
+[Model]
+model_type = transmission
+
+    [[Absorption]]
+
+    [[CIA]]
+    cia_pairs = H2-H2, H2-He,
+
+    [[Rayleigh]]
+
+[Observation]
+observed_spectrum = ../WASP-39b_spectrum_assignment3_taskB.dat
+
+[Optimizer]
+optimizer = nestle
+num_live_points=500
+method = multi
+
+[Fitting]
+planet_radius:fit = True
+planet_radius:bounds = 1, 1.5
+
+T:fit = True
+T:bounds = 800, 1500
+
+H2O:fit = True
+H2O:bounds = 1e-3,1e-1
+
+CO2:fit = True
+CO2:bounds = 1e-5,1e-3
+
+CO:fit = True
+CO:bounds = 1e-3,1e-1
+
+Na:fit = True
+Na:bounds = 1e-4,1e-2
+
+He_H2:fit = True
+He_H2:bounds = 1e-2, 0.5
+
+
