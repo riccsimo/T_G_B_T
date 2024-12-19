@@ -57,7 +57,7 @@ model_type = transmission
     [[Rayleigh]]
 
 [Observation]
-observed_spectrum = ../WASP-39b_spectrum_assignment3_taskB.dat
+observed_spectrum = ../taskB/WASP-39b_spectrum_assignment3_taskB.dat
 
 [Optimizer]
 optimizer = nestle
@@ -69,7 +69,7 @@ planet_radius:fit = True
 planet_radius:bounds = 1, 1.5
 
 T:fit = True
-T:bounds = 800, 1500
+T:bounds = 800, 1200
 
 H2O:fit = True
 H2O:bounds = 1e-3,1e-1
@@ -78,7 +78,7 @@ CO2:fit = True
 CO2:bounds = 1e-5,1e-3
 
 CO:fit = True
-CO:bounds = 1e-3,1e-1
+CO:bounds = 1e-3, 0.5
 
 Na:fit = True
 Na:bounds = 1e-4,1e-2
