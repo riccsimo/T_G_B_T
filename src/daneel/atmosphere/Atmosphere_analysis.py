@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import corner
+from taurex.plot.corner import corner
 import numpy as np
 import taurex.log
 taurex.log.disableLogging()
@@ -45,7 +45,9 @@ class AtmosphereForwardModel:
         self.xsec_path = globals['xsec_path']
         self.cia_path = globals['cia_path']
         self.phoenix_path = globals.get('phoenix_path', False)
-        
+        #lmbda
+        self.log_lambda0 = float(globals['log_lmbda0'])
+        self.log_lambda1 = float(globals['log_lmbda1'])
         # Model
         model = params.get('Model')
         self.model_type = model['type']
@@ -89,6 +91,8 @@ class AtmosphereForwardModel:
         self.path_to_observed_spectrum = params.get('path_to_observed_spectrum')
         self.num_live_points = float(params.get('num_live_points',50))
         self.tol = float(params.get('tol',0.5))
+        
+
         
     def construct_taurex_model(self):
         OpacityCache().clear_cache()
@@ -178,7 +182,7 @@ class AtmosphereForwardModel:
         #running the model
         #original_wavenumber_grid, rprs, tau, _ = self.result
         #Make a logarithmic grid
-        wngrid = np.sort(10000/np.logspace(-0.4,1.1,1000))
+        wngrid = np.sort(10000/np.logspace(self.log_lambda0,self.log_lambda1,1000))
         bn = SimpleBinner(wngrid=wngrid)
         print('Building the model')
         bin_wavenumber, bin_rprs,_,_  = bn.bin_model(self.model.model(wngrid=wngrid))
@@ -186,7 +190,7 @@ class AtmosphereForwardModel:
         
         # Save the spectrum data
         wavelength = 10000 / bin_wavenumber  # Convert wavenumber to microns
-        rprs_squared = bin_rprs**2
+        rprs_squared = bin_rprs
         rprs_error = np.zeros(len(rprs_squared)) + np.std(rprs_squared)
         #rprs_error = np.sqrt(rprs_squared)
 
@@ -209,13 +213,7 @@ class AtmosphereForwardModel:
         plt.show()
         
     def Retrival(self):
-        #running the model
-        #Make a logarithmic grid
-        wngrid = np.sort(10000/np.logspace(-0.4,1.1,1000))
-        bn = SimpleBinner(wngrid=wngrid)
-        print('Running the model')
-        self.model.model(wngrid=wngrid)
-        print('Complete')
+
         #parameters of the nested sampling algorithm
         opt = NestleOptimizer(num_live_points=self.num_live_points, tol=self.tol)
 
@@ -224,6 +222,18 @@ class AtmosphereForwardModel:
         except:
             error_message = f"Observed spectrum not found at {self.path_to_observed_spectrum}!"
             raise ValueError(error_message)
+        
+        #running the model
+        print('Running the model')
+        wngrid_obs = 10000 / obs.wavelengthGrid[::-1]  # wavelenghts to wavenumber (cm^-1)
+        wngrid_obs = np.sort(wngrid_obs)  # ensure monotonically encreasing grid
+
+        bn = SimpleBinner(wngrid=wngrid_obs)
+
+        # Compute the model
+        bin_wn, bin_rprs, _, _ = bn.bin_model(self.model.model(wngrid=wngrid_obs))
+                
+        print('Complete')
         
         # Binned for plotting
         obin = obs.create_binner()
@@ -301,7 +311,7 @@ class AtmosphereForwardModel:
         plt.show()
 
         # Compute (R_p/R_s)^2 and its standard deviation
-        rprs_sq = bestfit_spectrum**2
+        rprs_sq = bestfit_spectrum
         rprs_std = np.std(rprs_sq)
         rprs_error = np.full_like(rprs_sq, rprs_std)
 
@@ -314,18 +324,26 @@ class AtmosphereForwardModel:
         # Retrieve samples and weights from the solution (usually the first solution)
         samples = opt.get_samples(0)
         weights = opt.get_weights(0)
+        labels = opt.fit_names
 
-        # Create the corner plot (works for any number of parameters)
-        fig = corner.corner(
+        # Create the corner plot
+        fig = corner(
             samples,
+            
             weights=weights,
-            labels=param_names,
-            quantiles=[0.16, 0.5, 0.84],
-            show_titles=True,
-            title_fmt=".2f",
-            color="blue"
+            labels=labels,
+            bins=100,
+            smooth=1.5,# Parameter names
+                    # Importance weights
+            show_titles=True,          # Display titles with quantiles
+            title_fmt=".2f",           # Format for the quantile titles
+            quantiles=[0.16, 0.5, 0.84],  # Display the 16th, 50th, and 84th percentiles
+            color="#4682b4"               # Color for histograms
         )
-        fig.savefig(self.output_file_name[:-4]+'_cornerplot.png', dpi=150)
+
+        # Show the figure
         plt.show()
+        # save to a file
+        fig.savefig(f"{self.output_file_name[:-4]}_corner_plot.png")
 
     
