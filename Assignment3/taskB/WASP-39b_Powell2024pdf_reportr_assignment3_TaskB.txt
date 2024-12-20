@@ -1,0 +1,17 @@
+### WASP-39b System and Atmospheric Parameters
+
+#### System Parameters:
+- Stellar Radius: ~0.9324 R_sun (Solar Radii).
+- Planetary Radius (R_p): Not explicitly provided but derived from transit observations.
+- Orbital Period (P): 4.0552842 days.
+- Metallicity (Atmosphere): 7.1-8.0 × Solar.
+- Planetary Mass: 0.281 M_J (Jupiter masses).
+- Orbital Inclination: Aligned with near-infrared observations.
+
+#### Temperatures:
+- Planetary Atmospheric Temperature: ~1100 K.
+
+#### Atmospheric Composition:
+- Water Vapor (H₂O): 0.4-6.3% (volume mixing ratio).
+- Sulfur Dioxide (SO₂): 0.5-25 ppm (volume mixing ratio).
+- Sulfur Monoxide (SO): Weak detection (2.5σ); abundance not well constrained.
